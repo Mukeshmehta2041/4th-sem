@@ -1227,3 +1227,451 @@ Basic Structure of Computer: Structure of Desktop Computers, CPU: General Regist
 │  └─────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+### Hardwired Control Unit
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 HARDWIRED CONTROL UNIT                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Hardwired Control: Uses fixed logic circuits to generate  │
+│  control signals directly from instruction opcode          │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │              HARDWIRED STRUCTURE                        │ │
+│  │                                                         │ │
+│  │  Instruction Register (IR)                             │ │
+│  │  ┌─────────────────────────────────────┐                │ │
+│  │  │ OpCode │ Operands │    Flags       │                │ │
+│  │  └─────────────────────────────────────┘                │ │
+│  │       │                                                 │ │
+│  │       ▼                                                 │ │
+│  │  ┌─────────────────────────────────────┐                │ │
+│  │  │        INSTRUCTION DECODER           │                │ │
+│  │  │                                     │                │ │
+│  │  │  ┌────────┐ ┌────────┐ ┌────────┐   │                │ │
+│  │  │  │ AND    │ │  OR    │ │  NOT   │   │                │ │
+│  │  │  │ Gates  │ │ Gates  │ │ Gates  │   │                │ │
+│  │  │  └────────┘ └────────┘ └────────┘   │                │ │
+│  │  └─────────────────────────────────────┘                │ │
+│  │                       │                                 │ │
+│  │                       ▼                                 │ │
+│  │  ┌─────────────────────────────────────┐                │ │
+│  │  │       CONTROL SIGNAL GENERATOR      │                │ │
+│  │  │                                     │                │ │
+│  │  │  RegWrite  MemRead  MemWrite  ALUOp │                │ │
+│  │  │     │         │        │       │    │                │ │
+│  │  └─────┼─────────┼────────┼───────┼────┘                │ │
+│  │        │         │        │       │                     │ │
+│  │        ▼         ▼        ▼       ▼                     │ │
+│  │   ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐           │ │
+│  │   │Register│ │ Memory │ │ Memory │ │  ALU   │           │ │
+│  │   │  File  │ │  Read  │ │ Write  │ │Control │           │ │
+│  │   └────────┘ └────────┘ └────────┘ └────────┘           │ │
+│  └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │            ADVANTAGES & DISADVANTAGES                   │ │
+│  │                                                         │ │
+│  │  Advantages:                                           │ │
+│  │  • Fast operation (direct logic)                       │ │
+│  │  • No memory access for control                        │ │
+│  │  • Simple timing control                               │ │
+│  │  • Lower cost for simple processors                    │ │
+│  │                                                         │ │
+│  │  Disadvantages:                                        │ │
+│  │  • Difficult to modify or debug                        │ │
+│  │  • Complex logic for complex instructions              │ │
+│  │  • Requires complete redesign for changes              │ │
+│  │  • Fixed instruction set                               │ │
+│  └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Microprogrammed Control Unit
+```
+┌─────────────────────────────────────────────────────────────┐
+│               MICROPROGRAMMED CONTROL UNIT                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Microprogrammed Control: Uses stored microinstructions    │
+│  in control memory to generate control signals             │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │           MICROPROGRAMMED STRUCTURE                     │ │
+│  │                                                         │ │
+│  │  Instruction Register                                  │ │
+│  │  ┌─────────────────────────────────────┐                │ │
+│  │  │ OpCode │ Operands │    Flags       │                │ │
+│  │  └─────────────────────────────────────┘                │ │
+│  │       │                                                 │ │
+│  │       ▼                                                 │ │
+│  │  ┌─────────────────────────────────────┐                │ │
+│  │  │      MICROPROGRAM COUNTER (μPC)     │                │ │
+│  │  │           Address Generator         │                │ │
+│  │  └─────────────────────────────────────┘                │ │
+│  │                       │                                 │ │
+│  │                       ▼                                 │ │
+│  │  ┌─────────────────────────────────────┐                │ │
+│  │  │        CONTROL MEMORY               │                │ │
+│  │  │                                     │                │ │
+│  │  │  0000: │RegA│RegB│ALU │Mem│Next│    │                │ │
+│  │  │  0001: │ 01 │ 10 │ADD │RD │0010│    │                │ │
+│  │  │  0002: │ 10 │ 00 │OR  │WR │0003│    │                │ │
+│  │  │  0003: │ 11 │ 01 │AND │-- │0000│    │                │ │
+│  │  │  ....  │    │    │    │   │    │    │                │ │
+│  │  └─────────────────────────────────────┘                │ │
+│  │                       │                                 │ │
+│  │                       ▼                                 │ │
+│  │  ┌─────────────────────────────────────┐                │ │
+│  │  │    MICROINSTRUCTION REGISTER        │                │ │
+│  │  │         (Control Word)              │                │ │
+│  │  └─────────────────────────────────────┘                │ │
+│  │                       │                                 │ │
+│  │                       ▼                                 │ │
+│  │       Control Signals to CPU Components                │ │
+│  └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │               MICROPROGRAM EXECUTION                    │ │
+│  │                                                         │ │
+│  │  1. Fetch machine instruction into IR                  │ │
+│  │  2. OpCode → μPC (Load starting microaddress)          │ │
+│  │  3. Read microinstruction from control memory          │ │
+│  │  4. Execute microinstruction (generate signals)        │ │
+│  │  5. μPC ← Next Address field                           │ │
+│  │  6. Repeat steps 3-5 until instruction complete        │ │
+│  │                                                         │ │
+│  │  Example: ADD R1, R2, R3 microprogram                  │ │
+│  │  μAddr │ Control Word                   │ Next          │ │
+│  │  ──────┼────────────────────────────────┼──────         │ │
+│  │  0010  │ RegA=R2, RegB=R3, ALU=ADD     │ 0011          │ │
+│  │  0011  │ RegDest=R1, RegWrite=1         │ 0000          │ │
+│  └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Microinstruction Formats
+```
+┌─────────────────────────────────────────────────────────────┐
+│               MICROINSTRUCTION FORMATS                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │            HORIZONTAL MICROINSTRUCTION                  │ │
+│  │                                                         │ │
+│  │  Each bit controls a specific control signal            │ │
+│  │                                                         │ │
+│  │  64-bit Microinstruction Example:                      │ │
+│  │  ┌──┬──┬──┬───┬───┬───┬────┬────┬─────┬──────┬────────┐  │ │
+│  │  │RegA│RegB│Dest│ALU│Mem│Bus│RegW│MemR│MemW │Branch│Next│  │ │
+│  │  │ 3  │ 3 │ 3  │ 4 │ 2 │ 2 │ 1  │ 1  │ 1   │  2   │ 16 │  │ │
+│  │  └──┴──┴──┴───┴───┴───┴────┴────┴─────┴──────┴────────┘  │ │
+│  │                                                         │ │
+│  │  Field Meanings:                                       │ │
+│  │  • RegA/RegB: Source register selectors               │ │
+│  │  • Dest: Destination register selector                │ │
+│  │  • ALU: ALU operation code                             │ │
+│  │  • Mem: Memory operation control                       │ │
+│  │  • Bus: Bus control signals                            │ │
+│  │  • RegW: Register write enable                         │ │
+│  │  • MemR/MemW: Memory read/write enables                │ │
+│  │  • Branch: Conditional branch control                  │ │
+│  │  • Next: Address of next microinstruction              │ │
+│  │                                                         │ │
+│  │  Advantages: Simple decoding, fast execution           │ │
+│  │  Disadvantages: Long instruction word, wasteful        │ │
+│  └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │             VERTICAL MICROINSTRUCTION                   │ │
+│  │                                                         │ │
+│  │  Encoded format with operation codes                   │ │
+│  │                                                         │ │
+│  │  32-bit Microinstruction Example:                      │ │
+│  │  ┌────────────┬─────────────┬──────────────────────────┐ │ │
+│  │  │  Op Code   │  Operands   │      Next Address        │ │ │
+│  │  │   8 bits   │   8 bits    │       16 bits            │ │ │
+│  │  └────────────┴─────────────┴──────────────────────────┘ │ │
+│  │                                                         │ │
+│  │  Operation Codes:                                      │ │
+│  │  00000001: Load register from memory                   │ │
+│  │  00000010: Store register to memory                    │ │
+│  │  00000100: Arithmetic operation                        │ │
+│  │  00001000: Logic operation                             │ │
+│  │  00010000: Branch operation                            │ │
+│  │                                                         │ │
+│  │  Advantages: Shorter instruction, efficient encoding   │ │
+│  │  Disadvantages: Requires decoder, slower execution     │ │
+│  └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Microprogram Sequencer and Control Memory
+```
+┌─────────────────────────────────────────────────────────────┐
+│           MICROPROGRAM SEQUENCER & CONTROL MEMORY          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │              MICROPROGRAM SEQUENCER                     │ │
+│  │                                                         │ │
+│  │  Controls the sequence of microinstruction execution   │ │
+│  │                                                         │ │
+│  │  ┌─────────────────────────────────────────────────────┐ │ │
+│  │  │           SEQUENCER COMPONENTS                      │ │ │
+│  │  │                                                     │ │ │
+│  │  │  ┌─────────────┐    ┌─────────────┐                │ │ │
+│  │  │  │Microprogram │    │   Mapping   │                │ │ │
+│  │  │  │  Counter    │    │    ROM      │                │ │ │
+│  │  │  │   (μPC)     │    │             │                │ │ │
+│  │  │  └─────────────┘    └─────────────┘                │ │ │
+│  │  │         │                    │                     │ │ │
+│  │  │         ▼                    ▼                     │ │ │
+│  │  │  ┌─────────────────────────────────┐               │ │ │
+│  │  │  │          MUX                    │               │ │ │
+│  │  │  │                                 │               │ │ │
+│  │  │  │ Inputs:                         │               │ │ │
+│  │  │  │ • μPC + 1 (Sequential)          │               │ │ │
+│  │  │  │ • Next field (Branch)           │               │ │ │
+│  │  │  │ • Mapping ROM (New instruction) │               │ │ │
+│  │  │  │ • Subroutine return address     │               │ │ │
+│  │  │  └─────────────────────────────────┘               │ │ │
+│  │  │                    │                               │ │ │
+│  │  │                    ▼                               │ │ │
+│  │  │              Control Memory                        │ │ │
+│  │  └─────────────────────────────────────────────────────┘ │ │
+│  │                                                         │ │
+│  │  Sequencing Operations:                                │ │
+│  │  • Sequential: μPC ← μPC + 1                          │ │
+│  │  • Branch: μPC ← Next Address field                   │ │
+│  │  • Conditional: μPC ← condition ? branch : μPC+1      │ │
+│  │  • Jump: μPC ← Mapping ROM[OpCode]                    │ │
+│  └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │                CONTROL MEMORY                           │ │
+│  │                                                         │ │
+│  │  Fast memory that stores microinstructions             │ │
+│  │                                                         │ │
+│  │  ┌─────────────────────────────────────────────────────┐ │ │
+│  │  │              MEMORY ORGANIZATION                    │ │ │
+│  │  │                                                     │ │ │
+│  │  │  Address │ Microinstruction                         │ │ │
+│  │  │  ────────┼─────────────────────────────────────     │ │ │
+│  │  │   0000   │ [Control Word for NOP]                  │ │ │
+│  │  │   0001   │ [Control Word for LOAD - Phase 1]       │ │ │
+│  │  │   0002   │ [Control Word for LOAD - Phase 2]       │ │ │
+│  │  │   0003   │ [Control Word for STORE - Phase 1]      │ │ │
+│  │  │   0004   │ [Control Word for STORE - Phase 2]      │ │ │
+│  │  │   0005   │ [Control Word for ADD - Phase 1]        │ │ │
+│  │  │   0006   │ [Control Word for ADD - Phase 2]        │ │ │
+│  │  │   ....   │ [More microinstructions]                │ │ │
+│  │  │                                                     │ │ │
+│  │  │  Characteristics:                                   │ │ │
+│  │  │  • High speed (ROM or fast RAM)                    │ │ │
+│  │  │  • Word size = microinstruction width              │ │ │
+│  │  │  • Capacity = number of microinstructions needed   │ │ │
+│  │  │  • Typical size: 1K to 4K words                    │ │ │
+│  │  └─────────────────────────────────────────────────────┘ │ │
+│  └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 10. Summary and Quick Reference
+
+### Key Concepts Summary
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    UNIT I SUMMARY                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │               COMPUTER ORGANIZATION                     │ │
+│  │                                                         │ │
+│  │  Basic Structure:                                      │ │
+│  │  • Von Neumann Architecture (CPU, Memory, I/O)         │ │
+│  │  • CPU Components (ALU, Control Unit, Registers)       │ │
+│  │  • Memory Hierarchy (Registers, Cache, RAM, Storage)   │ │
+│  │                                                         │ │
+│  │  CPU Architecture:                                     │ │
+│  │  • Register Organization (General purpose, Special)    │ │
+│  │  • ALU Operations (Arithmetic, Logic, Shift)           │ │
+│  │  • Control Word (Microoperation specification)         │ │
+│  │                                                         │ │
+│  │  Stack Organization:                                   │ │
+│  │  • LIFO structure for temporary storage                │ │
+│  │  • Used for subroutines, interrupts, expressions      │ │
+│  │  • Operations: PUSH, POP                               │ │
+│  └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │              INSTRUCTION PROCESSING                     │ │
+│  │                                                         │ │
+│  │  Instruction Formats:                                  │ │
+│  │  • R-Type: Register operations                         │ │
+│  │  • I-Type: Immediate and Load/Store                    │ │
+│  │  • J-Type: Jump operations                             │ │
+│  │                                                         │ │
+│  │  Addressing Modes:                                     │ │
+│  │  • Immediate, Direct, Indirect                         │ │
+│  │  • Register, Register Indirect                         │ │
+│  │  • Displacement, Indexed                               │ │
+│  │                                                         │ │
+│  │  Execution Cycle:                                      │ │
+│  │  • Fetch → Decode → Execute → Writeback                │ │
+│  │  • Program Counter management                          │ │
+│  │  • Register Transfer Language notation                 │ │
+│  └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │               CONTROL UNIT DESIGN                      │ │
+│  │                                                         │ │
+│  │  Hardwired Control:                                    │ │
+│  │  • Fixed logic circuits                                │ │
+│  │  • Fast execution, difficult to modify                 │ │
+│  │  • Direct opcode to control signal mapping             │ │
+│  │                                                         │ │
+│  │  Microprogrammed Control:                              │ │
+│  │  • Stored microinstructions in control memory          │ │
+│  │  • Flexible, easier to modify                          │ │
+│  │  • Microprogram sequencer for control flow             │ │
+│  │                                                         │ │
+│  │  Microinstruction Formats:                             │ │
+│  │  • Horizontal: Direct control, longer words            │ │
+│  │  • Vertical: Encoded control, shorter words            │ │
+│  └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Important Formulas and Values
+```
+┌─────────────────────────────────────────────────────────────┐
+│               FORMULAS AND KEY VALUES                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Memory Addressing:                                        │
+│  • Address Space = 2^n (where n = address bus width)       │
+│  • 32-bit address bus = 2^32 = 4 GB addressable space     │
+│                                                             │
+│  Instruction Execution Time:                               │
+│  • Hardwired CU: T = Clock_Period × Clock_Cycles           │
+│  • Microprogrammed CU: T = μClock_Period × μInstructions   │
+│                                                             │
+│  Stack Operations:                                         │
+│  • PUSH: SP ← SP - 1, M[SP] ← Data                        │
+│  • POP: Data ← M[SP], SP ← SP + 1                         │
+│                                                             │
+│  Program Counter Updates:                                  │
+│  • Sequential: PC ← PC + 4 (32-bit instructions)          │
+│  • Branch: PC ← PC + offset (if condition true)           │
+│  • Jump: PC ← target_address                              │
+│                                                             │
+│  ALU Status Flags:                                        │
+│  • Zero (Z): Result = 0                                   │
+│  • Negative (N): Result < 0                               │
+│  • Carry (C): Carry out from MSB                          │
+│  • Overflow (V): Signed arithmetic overflow               │
+│                                                             │
+│  Effective Address Calculations:                           │
+│  • Direct: EA = Address                                    │
+│  • Indirect: EA = M[Address]                              │
+│  • Displacement: EA = Register + Offset                   │
+│  • Indexed: EA = Base + Index                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Comparison Table: Hardwired vs Microprogrammed Control
+```
+┌─────────────────────────────────────────────────────────────┐
+│           CONTROL UNIT COMPARISON                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Aspect           │ Hardwired        │ Microprogrammed     │
+│  ─────────────────┼──────────────────┼─────────────────────│
+│  Speed            │ Very Fast        │ Slower              │
+│  Flexibility      │ Fixed            │ Highly Flexible     │
+│  Cost             │ Lower            │ Higher              │
+│  Design Time      │ Longer           │ Shorter             │
+│  Debugging        │ Difficult        │ Easier              │
+│  Modification     │ Hardware change  │ Software change     │
+│  Complexity       │ High for complex │ Lower logic         │
+│                   │ instructions     │ complexity          │
+│  Memory Required  │ None for control │ Control memory      │
+│  Applications     │ RISC processors  │ CISC processors     │
+│                   │ Simple CPUs      │ Complex CPUs        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Exam Preparation Tips
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  EXAM PREPARATION GUIDE                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Important Topics for Exams:                              │
+│  1. Basic computer structure and CPU organization          │
+│  2. Register organization and addressing modes             │
+│  3. Instruction formats and execution cycle                │
+│  4. Stack operations and applications                      │
+│  5. Control unit design (hardwired vs microprogrammed)     │
+│  6. Microinstruction formats and sequencing                │
+│  7. ALU operations and status flags                        │
+│  8. Bus structure and I/O organization                     │
+│  9. Program counter and register transfer language         │
+│                                                             │
+│  Practice Problems:                                        │
+│  • Draw CPU block diagrams with all components             │
+│  • Design instruction formats for different operations     │
+│  • Trace instruction execution cycles step by step         │
+│  • Convert between different addressing modes              │
+│  • Design microprogram sequences for instructions          │
+│  • Calculate effective addresses for various modes         │
+│  • Analyze stack operations in detail                      │
+│  • Compare hardwired vs microprogrammed approaches         │
+│                                                             │
+│  Study Strategy:                                           │
+│  • Focus on understanding concepts over memorization       │
+│  • Practice drawing diagrams from memory                   │
+│  • Work through numerical examples and calculations        │
+│  • Compare and contrast different design approaches        │
+│  • Understand trade-offs in architectural decisions        │
+│  • Review all ASCII diagrams and trace through examples    │
+│                                                             │
+│  Common Exam Question Types:                               │
+│  • Block diagram drawing and labeling                      │
+│  • Instruction format design and analysis                  │
+│  • Address calculation for different modes                 │
+│  • Control unit design comparison                          │
+│  • Microprogram writing for given instructions             │
+│  • Stack operation tracing                                 │
+│  • Register transfer language notation                     │
+│  • CPU performance calculations                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Quick Review Checklist
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    FINAL CHECKLIST                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  □ Understand Von Neumann architecture components          │
+│  □ Know CPU internal organization and register types       │
+│  □ Memorize instruction formats (R, I, J types)            │
+│  □ Practice all addressing mode calculations               │
+│  □ Understand fetch-decode-execute cycle                   │
+│  □ Know stack operations and applications                  │
+│  □ Compare hardwired vs microprogrammed control            │
+│  □ Understand microinstruction formats                     │
+│  □ Know bus structure and characteristics                  │
+│  □ Practice RTL notation and examples                      │
+│  □ Understand ALU operations and status flags              │
+│  □ Know I/O system organization                            │
+│  □ Review all formulas and calculations                    │
+│  □ Practice drawing diagrams from memory                   │
+│  □ Understand design trade-offs and comparisons            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
